@@ -8,8 +8,8 @@
 
 ```bash
 # Клонируйте репозиторий:
-git clone https://github.com/shade1471/fast_api_intro.git
-cd /fast_api_intro
+git clone https://github.com/shade1471/fast_api_2
+cd /fast_api_2
 
 # Установите зависимости:
 pip install -r requirements.txt
