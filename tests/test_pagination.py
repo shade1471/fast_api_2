@@ -8,6 +8,7 @@ import requests
 @pytest.fixture(scope='module')
 def current_count_users(users_endpoint):
     response = requests.get(users_endpoint)
+    assert response.status_code == HTTPStatus.OK
     body = response.json()
     return body['total']
 
