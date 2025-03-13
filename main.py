@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from http import HTTPStatus
+from typing import Union
 from urllib.parse import urlparse
 
 import dotenv
@@ -25,7 +26,7 @@ async def get_users() -> Page[UserData]:
 
 
 @app.get("/api/users/{user_id}", response_model=UserResponse)
-async def get_user(user_id: int):
+async def get_user(user_id: int) -> Union[UserResponse, JSONResponse]:
     try:
         user_data = users_data[user_id]
     except KeyError:
@@ -34,7 +35,7 @@ async def get_user(user_id: int):
 
 
 @app.post("/api/users/", response_model=UserCreateResponse)
-async def create_user(user: UserCreateData):
+async def create_user(user: UserCreateData) -> UserCreateResponse:
     current_id = max(users_data.keys()) + 1
     formatted_date = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
     users_data[current_id] = UserData(id=current_id, email='', first_name=user.name, last_name='', avatar='',
@@ -43,7 +44,7 @@ async def create_user(user: UserCreateData):
 
 
 @app.put("/api/users/{user_id}", response_model=UserUpdatedResponse)
-async def update_user(user_id: int, user: UserCreateData):
+async def update_user(user_id: int, user: UserCreateData) -> Union[UserUpdatedResponse, JSONResponse]:
     try:
         exist_user = users_data[user_id]
     except KeyError:
@@ -59,7 +60,7 @@ async def update_user(user_id: int, user: UserCreateData):
 
 
 @app.delete("/api/users/{user_id}")
-async def delete_user(user_id: int):
+async def delete_user(user_id: int) -> JSONResponse:
     try:
         del users_data[user_id]
     except KeyError:
@@ -68,7 +69,7 @@ async def delete_user(user_id: int):
 
 
 @app.get('/status', response_model=AppStatus, status_code=HTTPStatus.OK)
-async def status():
+async def status() -> AppStatus:
     return AppStatus(database=bool(users_list), status='App run successful')
 
 
